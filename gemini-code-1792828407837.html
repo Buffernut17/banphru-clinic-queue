@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ระบบจองคิว คลินิกการแพทย์แผนไทย เทศบาลเมืองบ้านพรุ</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Prompt & Sarabun Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            thai: {
+              50: '#f2f7f4',
+              100: '#e1ede6',
+              200: '#c5dccf',
+              300: '#9dc2b0',
+              400: '#70a28c',
+              500: '#4e8670',
+              600: '#3c6c59',
+              700: '#325749',
+              800: '#2a473d',
+              900: '#243c34',
+            },
+            gold: {
+              500: '#d4af37',
+              600: '#b89528',
+            }
+          },
+          fontFamily: {
+            prompt: ['Prompt', 'sans-serif'],
+            sarabun: ['Sarabun', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Sarabun', sans-serif; background-color: #f8faf9; }
+    h1, h2, h3, h4, h5, h6, .font-heading { font-family: 'Prompt', sans-serif; }
+    .bg-pattern {
+      background-color: #3c6c59;
+      background-image: radial-gradient(#4e8670 0.75px, transparent 0.75px), radial-gradient(#4e8670 0.75px, #3c6c59 0.75px);
+      background-size: 30px 30px;
+      background-position: 0 0,15px 15px;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col justify-between text-gray-800">
+
+  <!-- TOP HEADER / BANNER -->
+  <header class="bg-pattern text-white shadow-lg border-b-4 border-gold-500">
+    <div class="max-w-5xl mx-auto px-4 py-6 text-center">
+      <h1 class="text-2xl md:text-3xl lg:text-4xl font-bold tracking-wide text-amber-200 mb-2">
+        คลินิกการแพทย์แผนไทย
+      </h1>
+      <p class="text-lg md:text-xl font-medium text-emerald-100">
+        ศูนย์บริการสาธารณสุข (ชั้น 2) เทศบาลเมืองบ้านพรุ
+      </p>
+      <div class="mt-4 inline-flex items-center gap-2 bg-emerald-950/60 backdrop-blur border border-emerald-500/30 px-4 py-2 rounded-full text-sm md:text-base">
+        <i class="fa-solid fa-phone-volume text-amber-400"></i>
+        <span>ติดต่อนัดหมาย/สอบถาม:</span>
+        <a href="tel:074384907" class="font-bold text-amber-300 hover:underline">074-384907</a>
+        <span>หรือ</span>
+        <a href="tel:0634941980" class="font-bold text-amber-300 hover:underline">063-4941980</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- NAVBAR BUTTONS -->
+  <div class="max-w-5xl mx-auto w-full px-4 mt-4 flex justify-between items-center">
+    <button id="btnNavUser" onclick="switchTab('user')" class="bg-thai-600 text-white px-4 py-2 rounded-lg font-heading font-medium text-sm shadow hover:bg-thai-700 transition flex items-center gap-2">
+      <i class="fa-solid fa-calendar-check"></i> หน้าระบบจองคิวสำหรับประชาชน
+    </button>
+    <button id="btnNavAdmin" onclick="switchTab('admin')" class="bg-gray-700 text-white px-4 py-2 rounded-lg font-heading font-medium text-sm shadow hover:bg-gray-800 transition flex items-center gap-2">
+      <i class="fa-solid fa-user-gear"></i> ระบบจัดการหลังบ้าน (Admin)
+    </button>
+  </div>
+
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-5xl mx-auto w-full px-4 py-6 flex-grow">
+
+    <!-- USER BOOKING SECTION -->
+    <section id="userSection" class="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden">
+      <div class="bg-thai-50 p-4 md:p-6 border-b border-thai-100 flex items-center justify-between">
+        <div>
+          <h2 class="text-xl md:text-2xl font-bold text-thai-800 flex items-center gap-2">
+            <i class="fa-solid fa-notes-medical text-thai-600"></i> บันทึกการจองคิวรับบริการ
+          </h2>
+          <p class="text-sm text-gray-600 mt-1">กรุณากรอกข้อมูลและเลือกสิทธิการรักษาเพื่อทำรายการนัดหมาย (จองล่วงหน้าได้ไม่เกิน 7 วัน / จำกัดไม่เกิน 4 คนต่อรอบ)</p>
+        </div>
+      </div>
+
+      <!-- IMPORTANT NOTICE BOX -->
+      <div class="mx-4 md:mx-8 mt-6 p-4 rounded-xl bg-amber-50 border-l-4 border-amber-500 text-amber-900 shadow-sm">
+        <h4 class="font-heading font-bold text-base md:text-lg flex items-center gap-2 text-amber-800">
+          <i class="fa-solid fa-triangle-exclamation text-amber-600"></i> ข้อปฏิบัติสำคัญสำหรับผู้รับบริการ
+        </h4>
+        <ul class="mt-2 space-y-1 text-sm md:text-base list-disc list-inside text-amber-900/90 font-medium">
+          <li>กรุณานำ <span class="font-bold text-red-700 underline">บัตรประชาชน</span> มาแสดงทุกครั้งที่มารับบริการ</li>
+          <li>กรุณาเดินทางมาถึงก่อนเวลานัดหมายอย่างน้อย <span class="font-bold text-amber-800">15 นาที</span></li>
+          <li>หากเดินทางมา <span class="font-bold text-red-700">เลยเวลานัดหมายเกิน 15 นาที ระบบจะทำการยกเลิกการจองโดยอัตโนมัติ</span> เพื่อเปิดสิทธิให้ผู้รับบริการท่านอื่น</li>
+        </ul>
+      </div>
+
+      <form id="bookingForm" onsubmit="handleBookingSubmit(event)" class="p-4 md:p-8 space-y-6">
+        
+        <!-- STEP 1: Personal Info -->
+        <div class="bg-gray-50 p-4 md:p-5 rounded-xl border border-gray-200">
+          <h3 class="font-heading font-semibold text-lg text-thai-800 mb-3 flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-thai-600 text-white text-xs flex items-center justify-center">1</span>
+            ข้อมูลผู้รับบริการ
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">ชื่อ-นามสกุล <span class="text-red-500">*</span></label>
+              <input type="text" id="custName" required placeholder="นาย/นาง/นางสาว สมชาย ใจดี" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-thai-500 focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">เบอร์โทรศัพท์ติดต่อ <span class="text-red-500">*</span></label>
+              <input type="tel" id="custPhone" maxlength="10" oninput="validatePhoneNumber(this)" required placeholder="08XXXXXXXX (กรอกตัวเลข 10 หลัก)" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-thai-500 focus:outline-none transition">
+              <p id="phoneHelpText" class="text-xs text-amber-600 mt-1 flex items-center gap-1">
+                <i class="fa-solid fa-circle-exclamation"></i> กรุณากรอกเบอร์โทรศัพท์ให้ครบ 10 หลัก (ขณะนี้กรอกแล้ว 0/10 หลัก)
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2: Rights & Procedure -->
+        <div class="bg-gray-50 p-4 md:p-5 rounded-xl border border-gray-200">
+          <h3 class="font-heading font-semibold text-lg text-thai-800 mb-3 flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-thai-600 text-white text-xs flex items-center justify-center">2</span>
+            สิทธิการรักษา และ หัตถการ
+          </h3>
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">เลือกสิทธิการรักษา <span class="text-red-500">*</span></label>
+              <select id="rightType" onchange="calculatePrice()" required class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-thai-500 focus:outline-none bg-white">
+                <option value="">-- กรุณาเลือกสิทธิการรักษา --</option>
+                <option value="cgd">สิทธิกรมบัญชีกลาง / รัฐวิสาหกิจ</option>
+                <option value="sso">สิทธิประกันสังคม</option>
+                <option value="opt">สิทธิข้าราชการ อปท.</option>
+                <option value="uc">สิทธิบัตรทอง (หลักประกันสุขภาพแห่งชาติ)</option>
+                <option value="general">ผู้ป่วยทั่วไป</option>
+                <option value="foreigner">ชาวต่างชาติ (Foreigner)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">เลือกรายการหัตถการ <span class="text-red-500">*</span></label>
+              <select id="serviceType" onchange="calculatePrice()" required class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-thai-500 focus:outline-none bg-white">
+                <option value="">-- กรุณาเลือกรายการ --</option>
+                <option value="therapy">นวดบำบัดรักษาโรค</option>
+                <option value="compress">นวดประคบสมุนไพร</option>
+                <option value="wellness">หัตถการการนวดเพื่อสุขภาพ</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">ระยะเวลาให้บริการ <span class="text-red-500">*</span></label>
+              <div class="flex gap-4">
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input type="radio" name="duration" value="1" checked onchange="calculatePrice(); updateAvailableTimeSlots();" class="text-thai-600 focus:ring-thai-500">
+                  <span>1 ชั่วโมง</span>
+                </label>
+                <label id="lblDuration2" class="flex items-center gap-2 cursor-pointer">
+                  <input type="radio" name="duration" value="2" id="radioDuration2" onchange="calculatePrice(); updateAvailableTimeSlots();" class="text-thai-600 focus:ring-thai-500">
+                  <span>2 ชั่วโมง</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Price Display Box -->
+            <div id="priceBox" class="hidden bg-emerald-50 border border-emerald-200 rounded-lg p-4 text-emerald-900">
+              <div class="flex justify-between items-center">
+                <span class="font-medium">ค่าบริการที่ต้องชำระสุทธิ:</span>
+                <span id="totalPrice" class="text-2xl font-bold text-thai-700">0 บาท</span>
+              </div>
+              <p id="priceNote" class="text-xs text-emerald-700 mt-1"></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 3: Date, Staff, Time -->
+        <div class="bg-gray-50 p-4 md:p-5 rounded-xl border border-gray-200">
+          <h3 class="font-heading font-semibold text-lg text-thai-800 mb-3 flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-thai-600 text-white text-xs flex items-center justify-center">3</span>
+            วัน เวลา และผู้ช่วยแพทย์แผนไทย/ผู้ให้บริการ
+          </h3>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">วันที่รับบริการ <span class="text-red-500">*</span></label>
+              <input type="date" id="bookingDate" onchange="onDateChange()" required class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-thai-500 focus:outline-none bg-white">
+              <p class="text-xs text-gray-500 mt-1">* สามารถเลือกจองล่วงหน้าได้ไม่เกิน 7 วัน (ปิดวันหยุดนักขัตฤกษ์)</p>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">ผู้ช่วยแพทย์แผนไทย/ผู้ให้บริการ <span class="text-red-500">*</span></label>
+              <select id="staffSelect" onchange="updateAvailableTimeSlots()" required class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-thai-500 focus:outline-none bg-white">
+                <option value="">-- กรุณาเลือกวันที่ก่อน --</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="mt-4">
+            <label class="block text-sm font-medium text-gray-700 mb-2">รอบเวลาที่ต้องการจอง <span class="text-red-500">*</span> (รับบริการได้สูงสุด 4 คน/รอบ)</label>
+            <div class="grid grid-cols-2 md:grid-cols-6 gap-2" id="timeSlotsGroup">
+              <button type="button" onclick="selectTime('09:00')" id="slot-09:00" class="time-slot border border-gray-300 py-2.5 rounded-lg text-center font-medium hover:bg-thai-50 text-sm">09:00 น.</button>
+              <button type="button" onclick="selectTime('10:00')" id="slot-10:00" class="time-slot border border-gray-300 py-2.5 rounded-lg text-center font-medium hover:bg-thai-50 text-sm">10:00 น.</button>
+              <button type="button" onclick="selectTime('11:00')" id="slot-11:00" class="time-slot border border-gray-300 py-2.5 rounded-lg text-center font-medium hover:bg-thai-50 text-sm">11:00 น.</button>
+              <button type="button" disabled class="bg-gray-100 text-gray-400 border border-gray-200 py-2.5 rounded-lg text-center font-medium text-sm cursor-not-allowed">12:00 พัก</button>
+              <button type="button" onclick="selectTime('13:00')" id="slot-13:00" class="time-slot border border-gray-300 py-2.5 rounded-lg text-center font-medium hover:bg-thai-50 text-sm">13:00 น.</button>
+              <button type="button" onclick="selectTime('14:00')" id="slot-14:00" class="time-slot border border-gray-300 py-2.5 rounded-lg text-center font-medium hover:bg-thai-50 text-sm">14:00 น.</button>
+              <button type="button" onclick="selectTime('15:00')" id="slot-15:00" class="time-slot border border-gray-300 py-2.5 rounded-lg text-center font-medium hover:bg-thai-50 text-sm">15:00 น.</button>
+            </div>
+            <p id="holidayAlert" class="text-xs text-red-600 mt-2 font-medium hidden">
+              <i class="fa-solid fa-calendar-xmark"></i> วันที่เลือกตรงกับวันหยุดนักขัตฤกษ์ ระบบงดให้บริการจองคิว
+            </p>
+            <p id="timeWarning" class="text-xs text-amber-600 mt-2 font-medium hidden">
+              <i class="fa-solid fa-circle-exclamation"></i> หมายเหตุ: รอบเวลา 11:00 น. และ 15:00 น. รองรับการรับบริการนวดได้เพียง 1 ชั่วโมงเท่านั้น
+            </p>
+          </div>
+        </div>
+
+        <button type="submit" id="btnSubmitBooking" class="w-full bg-thai-600 text-white font-heading font-semibold text-lg py-3 rounded-xl shadow-md hover:bg-thai-700 transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-paper-plane"></i> ยืนยันการจองคิว
+        </button>
+
+      </form>
+    </section>
+
+    <!-- ADMIN PANEL SECTION -->
+    <section id="adminSection" class="hidden space-y-6">
+      
+      <!-- Login Box -->
+      <div id="adminLoginBox" class="bg-white p-6 rounded-2xl shadow-md border border-gray-100 max-w-md mx-auto">
+        <h3 class="text-xl font-bold text-thai-800 mb-4 text-center font-heading">เข้าสู่ระบบผู้ดูแลระบบ (Admin)</h3>
+        <form onsubmit="handleAdminLogin(event)" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">รหัสผ่านระบบหลังบ้าน</label>
+            <input type="password" id="adminPass" placeholder="กรอกรหัสผ่าน (เริ่มต้น: admin1234)" required class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-thai-500 focus:outline-none">
+          </div>
+          <button type="submit" class="w-full bg-gray-800 text-white font-medium py-2 rounded-lg hover:bg-gray-900 transition">
+            เข้าสู่ระบบ
+          </button>
+        </form>
+      </div>
+
+      <!-- Dashboard (Visible after login) -->
+      <div id="adminDashboard" class="hidden space-y-6">
+        
+        <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+          <h2 class="text-xl font-bold text-gray-800 font-heading">แผงควบคุมระบบหลังบ้าน (Admin Dashboard)</h2>
+          <button onclick="adminLogout()" class="text-sm bg-red-100 text-red-600 px-3 py-1.5 rounded-lg hover:bg-red-200">
+            ออกจากระบบ
+          </button>
+        </div>
+
+        <!-- Manage Leave / Off Days -->
+        <div class="bg-white p-6 rounded-2xl shadow-md border border-gray-100">
+          <h3 class="font-heading font-semibold text-lg text-thai-800 mb-4 flex items-center gap-2">
+            <i class="fa-solid fa-user-slash text-amber-600"></i> บันทึกการลา / ไม่สะดวกปฏิบัติงาน (ระบุรายคน และรายวัน)
+          </h3>
+          
+          <form onsubmit="handleAddStaffOff(event)" class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-6 bg-gray-50 p-4 rounded-xl border border-gray-200">
+            <div>
+              <label class="block text-xs font-medium text-gray-700 mb-1">ผู้ช่วยแพทย์แผนไทย</label>
+              <select id="offStaffSelect" required class="w-full border border-gray-300 rounded-lg px-2.5 py-1.5 text-sm bg-white">
+                <option value="">-- เลือกผู้ให้บริการ --</option>
+                <option value="น.ส.เดซี่ร์ นิธินัยรัตน์ (หมอซีร์)">น.ส.เดซี่ร์ นิธินัยรัตน์ (หมอซีร์)</option>
+                <option value="น.ส.ขวัญชื่น ศรีสุวรรณ์ (หมอจอย)">น.ส.ขวัญชื่น ศรีสุวรรณ์ (หมอจอย)</option>
+                <option value="น.ส.ชีวนาถ กิตติตระกูลกาล (หมอเล็ก)">น.ส.ชีวนาถ กิตติตระกูลกาล (หมอเล็ก)</option>
+                <option value="นางสุวารี ชนะจิตต์ (หมอแขก)">นางสุวารี ชนะจิตต์ (หมอแขก)</option>
+                <option value="น.ส.มริวรรณ อาจฉกรรจน์ (หมอทอง)">น.ส.มริวรรณ อาจฉกรรจน์ (หมอทอง)</option>
+                <option value="น.ส.จิตติ เลิศกสิกรรม (หมอมุ่ย)">น.ส.จิตติ เลิศกสิกรรม (หมอมุ่ย)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-gray-700 mb-1">วันที่ต้องการปิดรับจอง</label>
+              <input type="date" id="offDateInput" required class="w-full border border-gray-300 rounded-lg px-2.5 py-1.5 text-sm bg-white">
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-gray-700 mb-1">เหตุผลการลา/ไม่อยู่</label>
+              <input type="text" id="offReasonInput" placeholder="เช่น ลากิจ, ลาป่วย, อบรม" class="w-full border border-gray-300 rounded-lg px-2.5 py-1.5 text-sm bg-white">
+            </div>
+            <div class="flex items-end">
+              <button type="submit" class="w-full bg-amber-600 text-white text-sm font-medium py-2 rounded-lg hover:bg-amber-700 transition">
+                <i class="fa-solid fa-plus"></i> บันทึกวันลา
+              </button>
+            </div>
+          </form>
+
+          <h4 class="font-medium text-sm text-gray-700 mb-2">รายการวันลาของผู้ช่วยแพทย์แผนไทยที่บันทึกไว้:</h4>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left border-collapse">
+              <thead class="bg-gray-100 text-gray-700 border-b">
+                <tr>
+                  <th class="p-2.5">ชื่อผู้ช่วยแพทย์แผนไทย</th>
+                  <th class="p-2.5">วันที่แจ้งลา</th>
+                  <th class="p-2.5">เหตุผล</th>
+                  <th class="p-2.5 text-center">การจัดการ</th>
+                </tr>
+              </thead>
+              <tbody id="staffOffTableBody">
+                <!-- Data populated dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Booking List Table -->
+        <div class="bg-white p-6 rounded-2xl shadow-md border border-gray-100">
+          <h3 class="font-heading font-semibold text-lg text-thai-800 mb-4 flex items-center gap-2">
+            <i class="fa-solid fa-list-check text-thai-600"></i> รายการจองคิวทั้งหมดในระบบ
+          </h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left border-collapse">
+              <thead class="bg-thai-50 text-thai-900 border-b">
+                <tr>
+                  <th class="p-3">วันที่/เวลา</th>
+                  <th class="p-3">ชื่อ-นามสกุล</th>
+                  <th class="p-3">เบอร์โทรศัพท์</th>
+                  <th class="p-3">สิทธิ/รายการ</th>
+                  <th class="p-3">ผู้ให้บริการ</th>
+                  <th class="p-3">ยอดชำระ</th>
+                  <th class="p-3 text-center">จัดการ</th>
+                </tr>
+              </thead>
+              <tbody id="bookingTableBody" class="divide-y divide-gray-200">
+                <!-- Data populated dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-thai-900 text-emerald-100 py-6 border-t border-thai-800 mt-8">
+    <div class="max-w-5xl mx-auto px-4 text-center space-y-2 text-xs md:text-sm">
+      <p class="font-semibold text-amber-200">คลินิกการแพทย์แผนไทย ศูนย์บริการสาธารณสุข (ชั้น 2) เทศบาลเมืองบ้านพรุ</p>
+      <p class="text-emerald-300">เบอร์โทรศัพท์ติดต่อ: 074-384907 หรือ 063-4941980</p>
+      <p class="text-emerald-400/60 pt-2 border-t border-emerald-800/50">© ระบบจองคิวออนไลน์ เทศบาลเมืองบ้านพรุ อำเภอหาดใหญ่ จังหวัดสงขลา</p>
+    </div>
+  </footer>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    // Staff Weekly Schedule Configuration
+    const weeklySchedule = {
+      1: ["น.ส.เดซี่ร์ นิธินัยรัตน์ (หมอซีร์)", "นางสุวารี ชนะจิตต์ (หมอแขก)", "น.ส.ขวัญชื่น ศรีสุวรรณ์ (หมอจอย)", "น.ส.จิตติ เลิศกสิกรรม (หมอมุ่ย)"], // Mon
+      2: ["นางสุวารี ชนะจิตต์ (หมอแขก)", "น.ส.มริวรรณ อาจฉกรรจน์ (หมอทอง)", "น.ส.ชีวนาถ กิตติตระกูลกาล (หมอเล็ก)", "น.ส.จิตติ เลิศกสิกรรม (หมอมุ่ย)"], // Tue
+      3: ["นางสุวารี ชนะจิตต์ (หมอแขก)", "น.ส.มริวรรณ อาจฉกรรจน์ (หมอทอง)", "น.ส.ชีวนาถ กิตติตระกูลกาล (หมอเล็ก)", "น.ส.ขวัญชื่น ศรีสุวรรณ์ (หมอจอย)"], // Wed
+      4: ["น.ส.มริวรรณ อาจฉกรรจน์ (หมอทอง)", "น.ส.ชีวนาถ กิตติตระกูลกาล (หมอเล็ก)", "น.ส.เดซี่ร์ นิธินัยรัตน์ (หมอซีร์)", "น.ส.จิตติ เลิศกสิกรรม (หมอมุ่ย)"], // Thu
+      5: ["นางสุวารี ชนะจิตต์ (หมอแขก)", "น.ส.เดซี่ร์ นิธินัยรัตน์ (หมอซีร์)", "น.ส.มริวรรณ อาจฉกรรจน์ (หมอทอง)", "น.ส.จิตติ เลิศกสิกรรม (หมอมุ่ย)"], // Fri
+      6: ["น.ส.มริวรรณ อาจฉกรรจน์ (หมอทอง)", "น.ส.ชีวนาถ กิตติตระกูลกาล (หมอเล็ก)", "น.ส.ขวัญชื่น ศรีสุวรรณ์ (หมอจอย)", "น.ส.เดซี่ร์ นิธินัยรัตน์ (หมอซีร์)"], // Sat
+      0: ["นางสุวารี ชนะจิตต์ (หมอแขก)", "น.ส.ชีวนาถ กิตติตระกูลกาล (หมอเล็ก)", "น.ส.ขวัญชื่น ศรีสุวรรณ์ (หมอจอย)", "น.ส.เดซี่ร์ นิธินัยรัตน์ (หมอซีร์)"]  // Sun
+    };
+
+    const ALL_TIME_SLOTS = ["09:00", "10:00", "11:00", "13:00", "14:00", "15:00"];
+
+    // Thai Public Holidays (MM-DD format)
+    const HOLIDAYS = ["01-01", "01-02", "03-03", "04-06", "04-13", "04-14", "04-15", "05-01", "05-04", "06-03", "07-28", "07-29", "07-30", "08-12", "10-13", "10-23", "12-05", "12-07", "12-10", "12-31"];
+
+    const NEXT_SLOT_MAP = {
+      "09:00": "10:00",
+      "10:00": "11:00",
+      "13:00": "14:00",
+      "14:00": "15:00"
+    };
+
+    // Global App State
+    let selectedTimeSlot = '';
+    let staffOffList = JSON.parse(localStorage.getItem('banphru_staff_off')) || [];
+    let bookingList = JSON.parse(localStorage.getItem('banphru_bookings')) || [];
+
+    // Max capacity limit per slot
+    const MAX_CAPACITY_PER_SLOT = 4;
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const today = new Date();
+      const maxDate = new Date();
+      maxDate.setDate(today.getDate() + 7);
+
+      const todayStr = today.toISOString().split('T')[0];
+      const maxStr = maxDate.toISOString().split('T')[0];
+
+      const bookingDateInput = document.getElementById('bookingDate');
+      bookingDateInput.min = todayStr;
+      bookingDateInput.max = maxStr;
+
+      renderStaffOffTable();
+      renderBookingTable();
+    });
+
+    // Real-time Phone Number Validation Rules
+    function validatePhoneNumber(input) {
+      input.value = input.value.replace(/[^0-9]/g, '');
+      const helpText = document.getElementById('phoneHelpText');
+      const val = input.value;
+
+      if (val.length === 10) {
+        input.classList.remove('border-gray-300', 'border-amber-500', 'focus:ring-amber-500');
+        input.classList.add('border-emerald-500', 'focus:ring-emerald-500', 'bg-emerald-50/30');
+        helpText.className = "text-xs text-emerald-600 mt-1 flex items-center gap-1 font-medium";
+        helpText.innerHTML = '<i class="fa-solid fa-circle-check"></i> เบอร์โทรศัพท์ถูกต้อง (ครบ 10 หลัก)';
+      } else {
+        input.classList.remove('border-emerald-500', 'focus:ring-emerald-500', 'bg-emerald-50/30');
+        input.classList.add('border-amber-500', 'focus:ring-amber-500');
+        helpText.className = "text-xs text-amber-600 mt-1 flex items-center gap-1";
+        helpText.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> กรุณากรอกเบอร์โทรศัพท์ให้ครบ 10 หลัก (ขณะนี้กรอกแล้ว ${val.length}/10 หลัก)`;
+      }
+    }
+
+    function switchTab(tab) {
+      if (tab === 'user') {
+        document.getElementById('userSection').classList.remove('hidden');
+        document.getElementById('adminSection').classList.add('hidden');
+        document.getElementById('btnNavUser').className = "bg-thai-600 text-white px-4 py-2 rounded-lg font-heading font-medium text-sm shadow flex items-center gap-2";
+        document.getElementById('btnNavAdmin').className = "bg-gray-700 text-white px-4 py-2 rounded-lg font-heading font-medium text-sm shadow hover:bg-gray-800 transition flex items-center gap-2";
+      } else {
+        document.getElementById('userSection').classList.add('hidden');
+        document.getElementById('adminSection').classList.remove('hidden');
+        document.getElementById('btnNavAdmin').className = "bg-thai-600 text-white px-4 py-2 rounded-lg font-heading font-medium text-sm shadow flex items-center gap-2";
+        document.getElementById('btnNavUser').className = "bg-gray-700 text-white px-4 py-2 rounded-lg font-heading font-medium text-sm shadow hover:bg-gray-800 transition flex items-center gap-2";
+      }
+    }
+
+    function calculatePrice() {
+      const right = document.getElementById('rightType').value;
+      const service = document.getElementById('serviceType').value;
+      const duration = document.querySelector('input[name="duration"]:checked')?.value || "1";
+      const priceBox = document.getElementById('priceBox');
+      const totalPriceEl = document.getElementById('totalPrice');
+      const priceNoteEl = document.getElementById('priceNote');
+
+      if (!right || !service) {
+        priceBox.classList.add('hidden');
+        return;
+      }
+
+      priceBox.classList.remove('hidden');
+      let price = 0;
+      let note = "";
+
+      if (service === 'wellness') {
+        price = duration === "2" ? 500 : 250;
+        note = "หัตถการการนวดเพื่อสุขภาพ ชำระค่าบริการ 250 บาท/ชั่วโมง";
+      } else if (right === 'foreigner') {
+        price = duration === "2" ? 800 : 400;
+        note = "สิทธิชาวต่างชาติ อัตราค่าบริการ 400 บาท/ชั่วโมง";
+      } else if (right === 'opt') {
+        price = duration === "2" ? 200 : 0;
+        note = "สิทธิข้าราชการ อปท. นวด 1 ชม. ไม่ต้องชำระ / 2 ชม. ชำระ 200 บาท";
+      } else if (right === 'uc') {
+        price = duration === "2" ? 300 : 100;
+        note = "สิทธิบัตรทอง นวด 1 ชม. 100 บาท / 2 ชม. 300 บาท";
+      } else if (right === 'cgd' || right === 'sso' || right === 'general') {
+        if (service === 'compress') {
+          price = duration === "2" ? 450 : 250;
+        } else {
+          price = duration === "2" ? 400 : 200;
+        }
+        note = `สิทธิ ${right === 'cgd' ? 'กรมบัญชีกลาง/รัฐวิสาหกิจ' : right === 'sso' ? 'ประกันสังคม' : 'ผู้ป่วยทั่วไป'}`;
+      }
+
+      totalPriceEl.innerText = price + " บาท";
+      priceNoteEl.innerText = note;
+    }
+
+    function isHoliday(dateStr) {
+      if (!dateStr) return false;
+      const mmdd = dateStr.substring(5);
+      return HOLIDAYS.includes(mmdd);
+    }
+
+    function getActiveStaffForDate(dateVal) {
+      if (!dateVal) return [];
+      const dateObj = new Date(dateVal);
+      const dayOfWeek = dateObj.getDay();
+      const availableStaff = weeklySchedule[dayOfWeek] || [];
+      return availableStaff.filter(staff => {
+        return !staffOffList.some(off => off.staffName === staff && off.offDate === dateVal);
+      });
+    }
+
+    function getSlotPatientCount(dateVal, timeSlot) {
+      return bookingList.filter(b => {
+        if (b.date !== dateVal) return false;
+        if (b.time === timeSlot) return true;
+        if (b.duration === "2" && NEXT_SLOT_MAP[b.time] === timeSlot) return true;
+        return false;
+      }).length;
+    }
+
+    function isStaffBusy(staffName, dateVal, timeSlot) {
+      return bookingList.some(b => {
+        if (b.date !== dateVal) return false;
+        const isSameStaff = (b.staff === staffName || b.staff === 'ANY' || staffName === 'ANY');
+        if (!isSameStaff) return false;
+
+        if (b.time === timeSlot) return true;
+        if (b.duration === "2" && NEXT_SLOT_MAP[b.time] === timeSlot) return true;
+
+        return false;
+      });
+    }
+
+    // Helper: Check if slot is in the past for today
+    function isTimeSlotPast(dateVal, timeSlot) {
+      const now = new Date();
+      const todayStr = now.toISOString().split('T')[0];
+
+      if (dateVal !== todayStr) return false; // If not today, return false
+
+      const [slotHour, slotMinute] = timeSlot.split(':').map(Number);
+      const currentHour = now.getHours();
+      const currentMinute = now.getMinutes();
+
+      if (currentHour > slotHour) return true;
+      if (currentHour === slotHour && currentMinute >= slotMinute) return true;
+
+      return false;
+    }
+
+    function onDateChange() {
+      const dateVal = document.getElementById('bookingDate').value;
+      const staffSelect = document.getElementById('staffSelect');
+      const holidayAlert = document.getElementById('holidayAlert');
+      const btnSubmit = document.getElementById('btnSubmitBooking');
+      staffSelect.innerHTML = '';
+
+      if (!dateVal) {
+        staffSelect.innerHTML = '<option value="">-- กรุณาเลือกวันที่ก่อน --</option>';
+        holidayAlert.classList.add('hidden');
+        btnSubmit.disabled = false;
+        updateAvailableTimeSlots();
+        return;
+      }
+
+      if (isHoliday(dateVal)) {
+        holidayAlert.classList.remove('hidden');
+        btnSubmit.disabled = true;
+        staffSelect.innerHTML = '<option value="">-- ปิดบริการเนื่องในวันหยุดนักขัตฤกษ์ --</option>';
+        updateAvailableTimeSlots();
+        return;
+      } else {
+        holidayAlert.classList.add('hidden');
+        btnSubmit.disabled = false;
+      }
+
+      const activeStaff = getActiveStaffForDate(dateVal);
+
+      if (activeStaff.length === 0) {
+        staffSelect.innerHTML = '<option value="">-- ไม่มีผู้ให้บริการในวันที่เลือก --</option>';
+      } else {
+        staffSelect.innerHTML = '<option value="ANY">-- ไม่ระบุผู้ให้บริการ (หมอคนใดก็ได้ / ระบบจัดให้) --</option>';
+        activeStaff.forEach(staff => {
+          const opt = document.createElement('option');
+          opt.value = staff;
+          opt.innerText = staff;
+          staffSelect.appendChild(opt);
+        });
+      }
+      updateAvailableTimeSlots();
+    }
+
+    function updateAvailableTimeSlots() {
+      const dateVal = document.getElementById('bookingDate').value;
+      const staffVal = document.getElementById('staffSelect').value;
+      const durationVal = document.querySelector('input[name="duration"]:checked')?.value || "1";
+
+      selectedTimeSlot = '';
+
+      ALL_TIME_SLOTS.forEach(time => {
+        const btn = document.getElementById('slot-' + time);
+        if (!btn) return;
+
+        btn.classList.remove('bg-thai-600', 'text-white', 'border-thai-600', 'bg-gray-100', 'text-gray-400', 'border-gray-200', 'cursor-not-allowed');
+        btn.classList.add('border-gray-300', 'hover:bg-thai-50');
+        btn.disabled = false;
+        btn.innerText = time + " น.";
+
+        if (!dateVal || isHoliday(dateVal)) {
+          btn.disabled = true;
+          btn.classList.add('bg-gray-100', 'text-gray-400', 'cursor-not-allowed');
+          return;
+        }
+
+        // 1. Lock Past Time Slots for Today
+        if (isTimeSlotPast(dateVal, time)) {
+          btn.disabled = true;
+          btn.classList.remove('hover:bg-thai-50', 'border-gray-300');
+          btn.classList.add('bg-gray-100', 'text-gray-400', 'border-gray-200', 'cursor-not-allowed');
+          btn.innerText = `${time} (เลยเวลาบริการ)`;
+          return;
+        }
+
+        // 2. Check Max Capacity 4 persons per slot
+        const currentCapacity = getSlotPatientCount(dateVal, time);
+        let isSlotFullByCapacity = currentCapacity >= MAX_CAPACITY_PER_SLOT;
+
+        if (durationVal === "2") {
+          const nextTime = NEXT_SLOT_MAP[time];
+          if (nextTime) {
+            const nextCapacity = getSlotPatientCount(dateVal, nextTime);
+            if (nextCapacity >= MAX_CAPACITY_PER_SLOT) {
+              isSlotFullByCapacity = true;
+            }
+          }
+        }
+
+        if (isSlotFullByCapacity) {
+          btn.disabled = true;
+          btn.classList.remove('hover:bg-thai-50', 'border-gray-300');
+          btn.classList.add('bg-gray-100', 'text-gray-400', 'border-gray-200', 'cursor-not-allowed');
+          btn.innerText = `${time} (เต็ม ${MAX_CAPACITY_PER_SLOT}/${MAX_CAPACITY_PER_SLOT} คน)`;
+          return;
+        }
+
+        // 3. Check 2-hr constraint for 11:00 & 15:00
+        if (durationVal === "2" && (time === "11:00" || time === "15:00")) {
+          btn.disabled = true;
+          btn.classList.remove('hover:bg-thai-50', 'border-gray-300');
+          btn.classList.add('bg-gray-100', 'text-gray-400', 'border-gray-200', 'cursor-not-allowed');
+          btn.innerText = time + " (1 ชม. เท่านั้น)";
+          return;
+        }
+
+        // 4. Check Staff Availability
+        if (staffVal) {
+          const activeStaff = getActiveStaffForDate(dateVal);
+
+          if (staffVal === 'ANY') {
+            const isAllBusy = activeStaff.every(staff => {
+              let busyNow = isStaffBusy(staff, dateVal, time);
+              if (durationVal === "2") {
+                const nextTime = NEXT_SLOT_MAP[time];
+                let busyNext = nextTime ? isStaffBusy(staff, dateVal, nextTime) : true;
+                return busyNow || busyNext;
+              }
+              return busyNow;
+            });
+
+            if (isAllBusy) {
+              btn.disabled = true;
+              btn.classList.remove('hover:bg-thai-50', 'border-gray-300');
+              btn.classList.add('bg-gray-100', 'text-gray-400', 'border-gray-200', 'cursor-not-allowed');
+              btn.innerText = time + " (เต็มแล้ว)";
+            }
+          } else {
+            let busyNow = isStaffBusy(staffVal, dateVal, time);
+            let busyNext = false;
+
+            if (durationVal === "2") {
+              const nextTime = NEXT_SLOT_MAP[time];
+              busyNext = nextTime ? isStaffBusy(staffVal, dateVal, nextTime) : false;
+            }
+
+            if (busyNow || busyNext) {
+              btn.disabled = true;
+              btn.classList.remove('hover:bg-thai-50', 'border-gray-300');
+              btn.classList.add('bg-gray-100', 'text-gray-400', 'border-gray-200', 'cursor-not-allowed');
+              btn.innerText = time + " (ถูกจองแล้ว)";
+            }
+          }
+        }
+      });
+    }
+
+    function selectTime(time) {
+      selectedTimeSlot = time;
+      document.querySelectorAll('.time-slot').forEach(btn => {
+        if (!btn.disabled) {
+          btn.classList.remove('bg-thai-600', 'text-white', 'border-thai-600');
+          btn.classList.add('border-gray-300');
+        }
+      });
+      const selectedBtn = document.getElementById('slot-' + time);
+      if (selectedBtn && !selectedBtn.disabled) {
+        selectedBtn.classList.add('bg-thai-600', 'text-white', 'border-thai-600');
+      }
+
+      const warningEl = document.getElementById('timeWarning');
+      const radio2 = document.getElementById('radioDuration2');
+
+      if (time === '11:00' || time === '15:00') {
+        warningEl.classList.remove('hidden');
+        document.querySelector('input[name="duration"][value="1"]').checked = true;
+        radio2.disabled = true;
+        calculatePrice();
+      } else {
+        warningEl.classList.add('hidden');
+        radio2.disabled = false;
+      }
+    }
+
+    function handleBookingSubmit(e) {
+      e.preventDefault();
+
+      // Strict Phone Validation
+      const phoneInput = document.getElementById('custPhone');
+      if (phoneInput.value.length !== 10) {
+        alert('กรุณากรอกเบอร์โทรศัพท์ติดต่อให้ครบ 10 หลัก เพื่อความถูกต้องในการติดต่อกลับ');
+        phoneInput.focus();
+        return;
+      }
+
+      const dateVal = document.getElementById('bookingDate').value;
+      if (isHoliday(dateVal)) {
+        alert('วันที่เลือกตรงกับวันหยุดนักขัตฤกษ์ ระบบงดให้บริการจองคิว');
+        return;
+      }
+
+      if (!selectedTimeSlot) {
+        alert('กรุณาเลือกรอบเวลาที่ต้องการจอง');
+        return;
+      }
+
+      const staffVal = document.getElementById('staffSelect').value;
+      const staffDisplay = staffVal === 'ANY' ? 'ไม่ระบุผู้ให้บริการ (ระบบจัดให้)' : staffVal;
+      const durationVal = document.querySelector('input[name="duration"]:checked').value;
+
+      const newBooking = {
+        id: Date.now(),
+        name: document.getElementById('custName').value,
+        phone: phoneInput.value,
+        right: document.getElementById('rightType').value,
+        service: document.getElementById('serviceType').value,
+        duration: durationVal,
+        date: dateVal,
+        staff: staffDisplay,
+        time: selectedTimeSlot,
+        price: document.getElementById('totalPrice').innerText
+      };
+
+      bookingList.push(newBooking);
+      localStorage.setItem('banphru_bookings', JSON.stringify(bookingList));
+      renderBookingTable();
+
+      let bookingMsg = `บันทึกการจองคิวเรียบร้อยแล้ว!\n\nคุณ ${newBooking.name}\nเบอร์ติดต่อ: ${newBooking.phone}\nวันที่: ${newBooking.date}\nเวลา: ${newBooking.time} น. (${newBooking.duration} ชั่วโมง)\nผู้ให้บริการ: ${newBooking.staff}\n\n📌 อย่าลืมนำ "บัตรประชาชน" มาแสดง และมาก่อนเวลานัด 15 นาทีนะคะ`;
+      if (durationVal === "2" && NEXT_SLOT_MAP[selectedTimeSlot]) {
+        bookingMsg += `\n* ล็อกคิวรอบถัดไป (${NEXT_SLOT_MAP[selectedTimeSlot]} น.) ให้อัตโนมัติ`;
+      }
+
+      alert(bookingMsg);
+      document.getElementById('bookingForm').reset();
+      document.getElementById('priceBox').classList.add('hidden');
+      document.getElementById('phoneHelpText').className = "text-xs text-amber-600 mt-1 flex items-center gap-1";
+      document.getElementById('phoneHelpText').innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> กรุณากรอกเบอร์โทรศัพท์ให้ครบ 10 หลัก (ขณะนี้กรอกแล้ว 0/10 หลัก)';
+      phoneInput.classList.remove('border-emerald-500', 'bg-emerald-50/30');
+      phoneInput.classList.add('border-gray-300');
+      
+      selectedTimeSlot = '';
+      updateAvailableTimeSlots();
+    }
+
+    // Admin Authentication & Actions
+    function handleAdminLogin(e) {
+      e.preventDefault();
+      const pass = document.getElementById('adminPass').value;
+      if (pass === 'admin1234' || pass === 'banphruthi123') {
+        document.getElementById('adminLoginBox').classList.add('hidden');
+        document.getElementById('adminDashboard').classList.remove('hidden');
+      } else {
+        alert('รหัสผ่านไม่ถูกต้อง');
+      }
+    }
+
+    function adminLogout() {
+      document.getElementById('adminLoginBox').classList.remove('hidden');
+      document.getElementById('adminDashboard').classList.add('hidden');
+      document.getElementById('adminPass').value = '';
+    }
+
+    function handleAddStaffOff(e) {
+      e.preventDefault();
+      const staffName = document.getElementById('offStaffSelect').value;
+      const offDate = document.getElementById('offDateInput').value;
+      const reason = document.getElementById('offReasonInput').value || 'ลาพักงาน/ไม่สะดวก';
+
+      if (!staffName || !offDate) return;
+
+      staffOffList.push({ id: Date.now(), staffName, offDate, reason });
+      localStorage.setItem('banphru_staff_off', JSON.stringify(staffOffList));
+      
+      renderStaffOffTable();
+      onDateChange();
+      alert('บันทึกวันลาเรียบร้อยแล้ว');
+      document.getElementById('offReasonInput').value = '';
+    }
+
+    function deleteStaffOff(id) {
+      staffOffList = staffOffList.filter(item => item.id !== id);
+      localStorage.setItem('banphru_staff_off', JSON.stringify(staffOffList));
+      renderStaffOffTable();
+      onDateChange();
+    }
+
+    function deleteBooking(id) {
+      if (confirm('คุณต้องการยกเลิกคิวการจองนี้ใช่หรือไม่?')) {
+        bookingList = bookingList.filter(item => item.id !== id);
+        localStorage.setItem('banphru_bookings', JSON.stringify(bookingList));
+        renderBookingTable();
+        updateAvailableTimeSlots();
+      }
+    }
+
+    function renderStaffOffTable() {
+      const tbody = document.getElementById('staffOffTableBody');
+      tbody.innerHTML = '';
+      if (staffOffList.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-center text-gray-500">ไม่มีรายการวันลาในระบบ</td></tr>';
+        return;
+      }
+
+      staffOffList.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.className = 'border-b hover:bg-gray-50';
+        tr.innerHTML = `
+          <td class="p-2.5 font-medium">${item.staffName}</td>
+          <td class="p-2.5 text-amber-700 font-semibold">${item.offDate}</td>
+          <td class="p-2.5 text-gray-600">${item.reason}</td>
+          <td class="p-2.5 text-center">
+            <button onclick="deleteStaffOff(${item.id})" class="text-xs bg-red-100 text-red-600 hover:bg-red-200 px-2.5 py-1 rounded">ลบ</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderBookingTable() {
+      const tbody = document.getElementById('bookingTableBody');
+      tbody.innerHTML = '';
+      if (bookingList.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="p-4 text-center text-gray-500">ยังไม่มีรายการจองคิวในขณะนี้</td></tr>';
+        return;
+      }
+
+      bookingList.forEach(b => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-gray-50';
+        tr.innerHTML = `
+          <td class="p-3 font-semibold text-thai-800">${b.date}<br><span class="text-xs text-gray-500">${b.time} น. (${b.duration} ชม.)</span></td>
+          <td class="p-3 font-medium">${b.name}</td>
+          <td class="p-3 font-mono text-thai-700">${b.phone}</td>
+          <td class="p-3 text-xs text-gray-600">${b.right}<br><b>${b.service}</b></td>
+          <td class="p-3 text-xs">${b.staff}</td>
+          <td class="p-3 font-bold text-emerald-700">${b.price}</td>
+          <td class="p-3 text-center">
+            <button onclick="deleteBooking(${b.id})" class="text-xs bg-red-100 text-red-600 hover:bg-red-200 px-2 py-1 rounded">ยกเลิก</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+  </script>
+</body>
+</html>
